@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, master ]
     paths:
-      - 'AlgoritmosGUI/**'
+      - 'RelojDigital/**'
       - '.github/workflows/android.yml'
   workflow_dispatch:
 
@@ -55,6 +55,6 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: AlgoritmosGUI-apk
-          path: AlgoritmosGUI/target/gluonfx/aarch64-android/gvm/*.apk
+          name: RelojDigital-apk
+          path: RelojDigital/target/gluonfx/aarch64-android/gvm/*.apk
           if-no-files-found: error
