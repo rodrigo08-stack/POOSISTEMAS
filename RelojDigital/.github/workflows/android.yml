@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -48,9 +49,9 @@ jobs:
             libxtst-dev
 
       - name: Build APK
-        working-directory: RelojDigital
         run: |
-          chmod +x mvnw
+          chmod +x RelojDigital/mvnw
+          cd RelojDigital
           export ANDROID_SDK=$ANDROID_HOME
           ./mvnw -Pandroid gluonfx:build gluonfx:package
         env:
@@ -58,14 +59,14 @@ jobs:
 
       - name: Buscar APK generado
         run: |
-          echo "================================="
-          echo "BUSCANDO APK GENERADO"
-          echo "================================="
-          find RelojDigital -type f -name "*.apk" -print
+          echo "======================================"
+          echo "BUSCANDO APK"
+          echo "======================================"
+          find . -type f -name "*.apk" -print
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: RelojDigital-apk
-          path: 'RelojDigital/**/*.apk'
+          path: '**/*.apk'
           if-no-files-found: error
