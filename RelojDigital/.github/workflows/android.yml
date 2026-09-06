@@ -59,14 +59,15 @@ jobs:
 
       - name: Buscar APK generado
         run: |
-          echo "======================================"
-          echo "BUSCANDO APK"
-          echo "======================================"
-          find . -type f -name "*.apk" -print
+          echo "===== APK ENCONTRADOS ====="
+          find . -type f \( -name "*.apk" -o -name "*.aab" \) -print
+          echo "==========================="
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: RelojDigital-apk
-          path: '**/*.apk'
+          path: |
+            **/*.apk
+            **/*.aab
           if-no-files-found: error
