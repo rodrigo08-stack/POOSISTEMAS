@@ -1,0 +1,77 @@
+name: Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Configurar GraalVM de Gluon
+        uses: gluonhq/setup-graalvm@master
+        with:
+          graalvm: '22.1.0.1-Final'
+          jdk: 'java17'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configurar Android NDK
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r28c
+          add-to-path: false
+
+      - name: Aumentar memoria
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 10
+
+      - name: Instalar librerias
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libasound2-dev \
+            libavcodec-dev \
+            libavformat-dev \
+            libavutil-dev \
+            libgl-dev \
+            libgtk-3-dev \
+            libpango1.0-dev \
+            libxtst-dev
+
+      - name: Compilar APK
+        run: |
+          cd RelojDigital_2
+          chmod +x mvnw
+          export ANDROID_SDK=$ANDROID_HOME
+          ./mvnw clean -Pandroid gluonfx:build gluonfx:package
+        env:
+          ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
+
+      - name: Buscar APK
+        run: |
+          echo "=============================="
+          echo "APK GENERADO:"
+          echo "=============================="
+          find RelojDigital_2 -type f -name "*.apk" -print
+
+      - name: Subir APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: RelojDigital-APK
+          path: 'RelojDigital_2/**/*.apk'
+          if-no-files-found: error
