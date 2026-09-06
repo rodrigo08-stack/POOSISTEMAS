@@ -1,4 +1,4 @@
-name: Android APK
+name: RelojDigital_2
 
 on:
   push:
@@ -72,6 +72,6 @@ jobs:
       - name: Subir APK
         uses: actions/upload-artifact@v4
         with:
-          name: RelojDigital-APK
-          path: 'RelojDigital_2/**/*.apk'
+          name: RelojDigital_2-APK
+          path: 'RelojDigital_2_2/**/*.apk'
           if-no-files-found: error
