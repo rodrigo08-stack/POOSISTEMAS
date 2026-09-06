@@ -24,7 +24,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Setup Android NDK
@@ -48,6 +48,7 @@ jobs:
             libxtst-dev
 
       - name: Build APK
+        working-directory: RelojDigital
         run: |
           chmod +x mvnw
           export ANDROID_SDK=$ANDROID_HOME
@@ -60,11 +61,11 @@ jobs:
           echo "================================="
           echo "BUSCANDO APK GENERADO"
           echo "================================="
-          find . -type f -name "*.apk" -print
+          find RelojDigital -type f -name "*.apk" -print
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: RelojDigital-apk
-          path: '**/*.apk'
+          path: 'RelojDigital/**/*.apk'
           if-no-files-found: error
