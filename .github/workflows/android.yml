@@ -1,4 +1,4 @@
-name: Compilar APK RelojDigital
+name: Compilar APK JavaFX Gluon
 
 on:
   push:
@@ -28,13 +28,14 @@ jobs:
         with:
           swap-size-gb: 10
 
-      - name: Compilar APK
+      - name: Compilar APK JavaFX
         run: |
           cd RelojDigital
-          mvn clean gluonfx:build gluonfx:package -Pandroid
+          chmod +x mvnw
+          ./mvnw clean gluonfx:build gluonfx:package -Pandroid
 
       - name: Subir APK final
         uses: actions/upload-artifact@v4
         with:
-          name: app-reloj-digital
+          name: app-reloj-digital-javafx
           path: RelojDigital/target/gluonfx/aarch64-android/gvm/*.apk
