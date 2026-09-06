@@ -28,11 +28,11 @@ jobs:
         with:
           swap-size-gb: 10
 
-      - name: Compilar APK JavaFX
+      - name: Compilar APK JavaFX con detalles de error
         run: |
           cd RelojDigital
           chmod +x mvnw
-          ./mvnw clean gluonfx:build gluonfx:package -Pandroid
+          ./mvnw clean gluonfx:build gluonfx:package -Pandroid -e
 
       - name: Subir APK final
         uses: actions/upload-artifact@v4
