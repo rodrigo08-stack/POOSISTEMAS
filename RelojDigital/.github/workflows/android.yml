@@ -3,9 +3,6 @@ name: Android APK
 on:
   push:
     branches: [ main, master ]
-    paths:
-      - 'RelojDigital/**'
-      - '.github/workflows/android.yml'
   workflow_dispatch:
 
 jobs:
@@ -27,7 +24,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
 
       - name: Setup Android NDK
@@ -51,7 +48,6 @@ jobs:
             libxtst-dev
 
       - name: Build APK
-        working-directory: RelojDigital
         run: |
           chmod +x mvnw
           export ANDROID_SDK=$ANDROID_HOME
@@ -60,7 +56,6 @@ jobs:
           ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
 
       - name: Buscar APK generado
-        working-directory: RelojDigital
         run: |
           echo "================================="
           echo "BUSCANDO APK GENERADO"
@@ -71,5 +66,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: RelojDigital-apk
-          path: 'RelojDigital/**/*.apk'
+          path: '**/*.apk'
           if-no-files-found: error
