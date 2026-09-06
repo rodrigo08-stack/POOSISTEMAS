@@ -1,0 +1,71 @@
+name: AndroidApk;
+
+on:
+push:
+branches: [ main, master ]
+paths:
+        - '**'
+        - '.github/workflows/android.yml'
+workflow_dispatch:
+
+jobs:
+build:
+runs-on: ubuntu-22.04
+
+steps:
+        - name: Checkout
+uses: actions/checkout@v4
+
+      - name: Setup Gluon's GraalVM
+uses: gluonhq/setup-graalvm@master
+with:
+graalvm: '22.1.0.1-Final'
+jdk: 'java17'
+env:
+GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Java
+uses: actions/setup-java@v4
+with:
+distribution: 'temurin'
+java-version: '17'
+
+        - name: Setup Android NDK
+uses: nttld/setup-ndk@v1
+id: setup-ndk
+with:
+ndk-version: r28c
+add-to-path: false
+
+        - name: Install native libraries
+run: |
+sudo apt-get update
+sudo apt-get install -y \
+libasound2-dev \
+libavcodec-dev \
+libavformat-dev \
+libavutil-dev \
+libgl-dev \
+libgtk-3-dev \
+libpango1.0-dev \
+libxtst-dev
+
+      - name: Build APK
+run: |
+chmod +x mvnw
+export ANDROID_SDK=$ANDROID_HOME
+        ./mvnw -Pandroid gluonfx:build gluonfx:package
+env:
+ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
+
+      - name: Show generated APK
+run: |
+echo "Buscando APK..."
+find . -type f -name "*.apk" -print
+
+      - name: Upload APK
+uses: actions/upload-artifact@v4
+with:
+name: RelojDigital-apk
+path: '**/*.apk'
+        if-no-files-found: error
