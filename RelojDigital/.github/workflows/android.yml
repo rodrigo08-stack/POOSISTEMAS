@@ -57,14 +57,16 @@ jobs:
         env:
           ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
 
-      - name: Show generated APK
+      - name: Buscar APK generado
         run: |
-          echo "Buscando APK..."
+          echo "================================="
+          echo "BUSCANDO APK GENERADO"
+          echo "================================="
           find . -type f -name "*.apk" -print
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: RelojDigital-apk
-          path: target/gluonfx/aarch64-android/gvm/*.apk
+          path: '**/*.apk'
           if-no-files-found: error
