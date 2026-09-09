@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Descargar código
         uses: actions/checkout@v4
@@ -34,8 +35,14 @@ jobs:
           chmod +x mvnw
           ./mvnw clean gluonfx:build gluonfx:package -Pandroid -X
 
+      - name: Buscar APK generado
+        run: |
+          echo "Buscando APKs..."
+          find . -type f -name "*.apk" -print
+
       - name: Subir APK final
         uses: actions/upload-artifact@v4
         with:
           name: app-reloj-digital-javafx
-          path: RelojDigital/target/gluonfx/aarch64-android/gvm/*.apk
+          path: '**/*.apk'
+          if-no-files-found: error
